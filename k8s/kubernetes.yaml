@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    konghq.com/methods: GET
+    konghq.com/regex-priority: "100"
+    konghq.com/strip-path: "false"
+    konghq.com/tags: ""
+    konghq.com/preserve-host: "false"
+  name: spec-testeste-viacep-viacep-getaddressbyzip-code
+spec:
+  ingressClassName: kong
+  rules:
+    - http:
+        paths:
+          - backend:
+              service:
+                name: spec-testeste
+                port:
+                  number: 80
+            path: /~/spec-testeste/ws/(?<zip_code>[^#?/]+)/json$
+            pathType: ImplementationSpecific
+      host: cluster-teste-3.vkpr.platform.vee.codes
+---
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    konghq.com/path: /
+    konghq.com/protocol: http
+  name: spec-testeste
+spec:
+  type: ExternalName
+  externalName: viacep.com.br
+---
+
